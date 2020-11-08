@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1603062387 source:c:\users\daniel\documents\faculdade\semestre 2\pim\esboço_pim\main.c
+	<stdio.h>
+	<string.h>
+	<locale.h>
+	<TIME.H>
+
+1603589707 source:c:\users\daniel\desktop\teste pim\esboço_pim\main.c
+	<stdio.h>
+	<string.h>
+	<locale.h>
+	<TIME.H>
+
+1604103757 source:c:\users\daniel\desktop\teste pim\trabalho_central_pim\main.c
+	<stdio.h>
+	<string.h>
+	<locale.h>
+	<TIME.H>
+
+1604692460 source:c:\users\daniel\desktop\trabalho_central_pim\main.c
+	<stdio.h>
+	<string.h>
+	<locale.h>
+	<stdbool.h>
+	<TIME.H>
+
