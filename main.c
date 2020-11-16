@@ -174,8 +174,11 @@ void PesquisaAgendamento (char pesquisa_num[30]){
 
 
         arquivo = AbreArquivo('l',"PesquisaTemp.txt");
+
+        strcpy(nomeAnterior,"");
         while(!feof(arquivo)){
             fscanf(arquivo,"%s %s %s %s %s %s %d %d %d %s %s %s", &nome, &ult_nome, &nome_medico, &telefone, &cpf_sdigito, &cpf_digito, &dia_consulta, &hora_consulta, &minuto_consulta, &especialidade, &num_carteira, unidade);
+
             if(strcmp(nomeAnterior,nome) != 0 && strcmp(pesquisa_num,num_carteira) == 0){
                 strcpy(nomeAnterior,nome);
                 printf("\n|------------------------------------------------------\n|Nome:...................... %s %s\n|Nome Do Medico:............ %s\n|Telefone:.................. %s\n|CPF:....................... %s-%s\n|Dia da Consulta:........... %d\n|Horario da Consulta:....... %d:%d\n|Especialidade:............. %s\n|Nc:........................ %s\n|Unidade:................... %s\n|------------------------------------------------------\n\n", nome, ult_nome, nome_medico, telefone, cpf_sdigito, cpf_digito, dia_consulta, hora_consulta, minuto_consulta, especialidade, num_carteira, unidade);
@@ -218,7 +221,7 @@ void DeletarAgendamento(char nomeDeletarAgenda[50], char num_carteiraDeletar[30]
             // Diferente de Zero = não são iguais
             if(strcmp(numAnterior,num_carteira) != 0){
                 strcpy(numAnterior,num_carteira);
-                if(strcmp(nomeDeletarAgenda,nome) != 0, strcmp(num_carteiraDeletar,num_carteira) != 0, diaDeletar != dia_consulta, horarioDeletar != hora_consulta, minutoDeletar != minuto_consulta){
+                if(strcmp(nomeDeletarAgenda,nome) != 0 && strcmp(num_carteiraDeletar,num_carteira) != 0 && diaDeletar != dia_consulta && horarioDeletar != hora_consulta && minutoDeletar != minuto_consulta){
                     fprintf(arquivoTemp, "%s %s %s %s %s %s %d %d %d %s %s %s\n", nome, ult_nome, nome_medico, telefone, cpf_sdigito, cpf_digito, dia_consulta, hora_consulta, minuto_consulta, especialidade, num_carteira, unidade);
                 }else{
                     apagou = true;
@@ -227,6 +230,7 @@ void DeletarAgendamento(char nomeDeletarAgenda[50], char num_carteiraDeletar[30]
         }
         FecharArquivo(arquivo);
         FecharArquivo(arquivoTemp);
+
         arquivo = AbreArquivo('g', "ListaAgendamento.txt");
         arquivoTemp = AbreArquivo('l', "ListaAgendamentoTemp.txt");
 
@@ -644,35 +648,63 @@ void sistemadeloginAtendimento(){
     FILE *arquivo;
     char login [30];
     char senha[30];
+    char permissao[30];
     char verificalogin[30];
     char verificasenha[30];
+    bool achou = false;
 
     do{
-    do{
-    printf("Digite seu login: ");
-    setbuf(stdin,NULL);
-    gets(verificalogin);
-    printf("\nDiigte sua senha: ");
-    setbuf(stdin,NULL);
-    gets(verificasenha);
+        printf("Digite seu login: ");
+        setbuf(stdin,NULL);
+        gets(verificalogin);
+        printf("\nDigite sua senha: ");
+        setbuf(stdin,NULL);
+        gets(verificasenha);
 
 
-    arquivo = AbreArquivo('l',"SistemadeLoginAtendimento.txt");
-    while(!feof(arquivo)){
-        fscanf(arquivo, "%s %s", &login, &senha);
+        arquivo = AbreArquivo('l',"SistemadeLoginAtendimento.txt");
+        while(!feof(arquivo)){
+            fscanf(arquivo, "%s %s %s", &login, &senha, &permissao);
+            if(strcmp(verificalogin, login) == 0 && strcmp(verificasenha, senha) == 0){
+                achou = true;
+                if(strcmp(permissao, "Medico") == 0 ){
+                    printf("Bem vindo Doutor (a).");
+                    sleep(2);
+                    system("cls");
+                    printf("Carregando...");
+                    sleep(2);
+                    system("cls");
+                    principal_medico();
+                }
 
-        if(strcmp(verificalogin, login) == 0){
-            if(strcmp(verificasenha, senha) == 0){
+                if(strcmp(permissao, "Atendente") == 0 ){
+                    principal_atendente();
+                    printf("Bem vindo Atendente");
+                    sleep(2);
+                    system("cls");
+                    printf("Carregando...");
+                    sleep(2);
+                    system("cls");
+                }
+
+                if(strcmp(permissao, "Administrador") == 0 ){
+                    printf("Bem vindo Administrador");
+                    sleep(2);
+                    system("cls");
+                    printf("Carregando...");
+                    sleep(2);
+                    system("cls");
+                    principal_adm();
+                }
+
+            }else{
+                printf("Caso Esqueceu seu login ou senha entre em contato com o administrador\nd4niel.arruda@gmail.com\n\nESPERE\n");
+                sleep(2);
+                system("cls");
             }
-        }else{
-            printf("Caso Esqueceu seu login ou senha entre em contato com o administrador\nd4niel.arruda@gmail.com\n\nESPERE\n");
-            sleep(2);
-            system("cls");
         }
-    }
 
-    }while(strcmp(verificalogin, login) != 0);
-    }while(strcmp(verificasenha, senha) != 0);
+    }while(!achou);
     FecharArquivo(arquivo);
 
 }
@@ -771,8 +803,6 @@ void login_e_menu_usuario(){
 
     }
     } while (login_escolha >4);
-
-
 }
 
 //tela de menu do atendimento e suas funções
@@ -1514,7 +1544,7 @@ int main ()
 
     printf("\n\t\t\t\t\t\t  | Usuarios | \t\t");
     printf("\n\t\t__________________________________________________________________________________\n\n");
-    printf("\t\t|0-Sair \t 1-Medico \t 2-Atendente \t 3-Conveniado \t4-Administrador  |\n");
+    printf("\t\t|0-Sair \t 1-Conveniado \t2-Usuários  |\n");
     printf("\t\t__________________________________________________________________________________\n\n");
 
     printf("\nEscolha um opção por favor --> ");
@@ -1533,30 +1563,6 @@ int main ()
         break;
 
     case 1:
-    	login_e_menu_usuario();
-        printf("Bem vindo Doutor (a).");
-        sleep(2);
-        system("cls");
-        printf("Carregando...");
-        sleep(2);
-        system("cls");
-        principal_medico();
-
-        break;
-
-    case 2:
-    	login_e_menu_usuario();
-    	printf("Bem vindo Atendente");
-    	sleep(2);
-        system("cls");
-        printf("Carregando...");
-        sleep(2);
-        system("cls");
-        principal_atendente();
-
-        break;
-
-    case 3:
         printf("Bem vindo Conveniado");
         sleep(2);
         system("cls");
@@ -1565,20 +1571,9 @@ int main ()
         system("cls");
         principal_conveniado();
 
+    case 2:
+    	sistemadeloginAtendimento();
         break;
-
-    case 4:
-        login_e_menu_usuario();
-        printf("Bem vindo Administrador");
-        sleep(2);
-        system("cls");
-        printf("Carregando...");
-        sleep(2);
-        system("cls");
-        principal_adm();
-
-        break;
-
     default:
         printf("opção incorreta");
         sleep(1,25);
