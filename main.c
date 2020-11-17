@@ -65,7 +65,7 @@ void ListarFeedback(){
     while(!feof(arquivo)){
         fscanf(arquivo,"%s %d %d",&nome_medico, &nota_medico, &nota_atendimento);
 
-            printf("| Nome Do Medico:... %s|\n| Nota do Medico:............... %d |\n| Nota do atendimento:.......... %d |\n\n",nome_medico, nota_medico, nota_atendimento);
+            printf("| Nome Do Medico:... %s         |\n| Nota do Medico:............... %d |\n| Nota do atendimento:.......... %d |\n\n",nome_medico, nota_medico, nota_atendimento);
         }
     FecharArquivo(arquivo);
 
@@ -256,7 +256,6 @@ void DeletarAgendamento(char nomeDeletarAgenda[50], char num_carteiraDeletar[30]
 }
 
 
-
 //função cadastra conveniado //pronta
 void Cadastra(char nome[30], char ult_nome[30], char telefone[20], char cpf_sdigito[15], char cpf_digito[15], char rg[15], int nascimento, char email[40], char num_carteira[30]);
 void Cadastra(char nome[30], char ult_nome[30], char telefone[20], char cpf_sdigito[15], char cpf_digito[15], char rg[15], int nascimento, char email[40], char num_carteira[30]){
@@ -285,12 +284,13 @@ void Listar(){
     char email[40];
     char num_carteira[30];
 
+    printf("LISTA DE CONVENIADOS");
     arquivo = AbreArquivo('l',"ListaCadastro.txt");
     while(!feof(arquivo)){
         fscanf(arquivo,"%s %s %s %s %s %s %d %s %s", &nome, &ult_nome, &telefone, &cpf_sdigito, &cpf_digito, &rg, &nascimento, &email, &num_carteira);
         if(strcmp(nomeAnterior,nome) != 0){
             strcpy(nomeAnterior,nome);
-            printf("LISTA DE CONVENIADO\n\n|------------------------------------------------------\n|Nome:............. %s %s\n|Telefone:......... %s\n|CPF:.............. %s-%s\n|RG:............... %s\n|Nascimento:....... %d\n|Email:............ %s\n|Nc:............... %s\n|------------------------------------------------------\n\n", nome, ult_nome, telefone, cpf_sdigito, cpf_digito, rg, nascimento, email, num_carteira);
+            printf("\n|------------------------------------------------------\n|Nome:............. %s %s\n|Telefone:......... %s\n|CPF:.............. %s-%s\n|RG:............... %s\n|Nascimento:....... %d\n|Email:............ %s\n|Nc:............... %s\n|------------------------------------------------------\n", nome, ult_nome, telefone, cpf_sdigito, cpf_digito, rg, nascimento, email, num_carteira);
         }
     }
     FecharArquivo(arquivo);
@@ -314,7 +314,7 @@ void PesquisaConveniado (char pesquisa_nome[50]){
     int nascimento;
     char email[40];
     char num_carteira[30];
-    char nomeAnterior[50];
+    char numAnterior[50];
     bool achou = false;
 
         arquivo = AbreArquivo('l', "ListaCadastro.txt");
@@ -324,8 +324,8 @@ void PesquisaConveniado (char pesquisa_nome[50]){
             fscanf(arquivo,"%s %s %s %s %s %s %d %s %s", &nome, &ult_nome, &telefone, &cpf_sdigito, &cpf_digito, &rg, &nascimento, &email, &num_carteira);
             // Zero = são iguais
             // Diferente de Zero = não são iguais
-            if(strcmp(nomeAnterior,nome) != 0){
-                strcpy(nomeAnterior,nome);
+            if(strcmp(numAnterior,num_carteira) != 0){
+                strcpy(numAnterior,num_carteira);
                 if(strcmp(pesquisa_nome,nome) == 0){
                     fprintf(arquivoTemp, "%s %s %s %s %s %s %d %s %s\n", nome, ult_nome, telefone, cpf_sdigito, cpf_digito, rg, nascimento, email, num_carteira);
                 }else{
@@ -338,10 +338,12 @@ void PesquisaConveniado (char pesquisa_nome[50]){
 
 
         arquivo = AbreArquivo('l',"PesquisaTemp.txt");
+
+        strcpy(numAnterior,"");
         while(!feof(arquivo)){
             fscanf(arquivo,"%s %s %s %s %s %s %d %s %s", &nome, &ult_nome, &telefone, &cpf_sdigito, &cpf_digito, &rg, &nascimento, &email, &num_carteira);
-            if(strcmp(nomeAnterior,nome) != 0 && strcmp(pesquisa_nome,nome) == 0){
-                strcpy(nomeAnterior,nome);
+            if(strcmp(numAnterior,num_carteira) != 0 && strcmp(pesquisa_nome,nome) == 0){
+                strcpy(numAnterior,num_carteira);
                 printf("\n\n|------------------------------------------------------\n|Nome:............. %s %s\n|Telefone:......... %s\n|CPF:.............. %s-%s\n|RG:............... %s\n|Nascimento:....... %d\n|Email:............ %s\n|Nc:............... %s\n|------------------------------------------------------\n\n", nome, ult_nome, telefone, cpf_sdigito, cpf_digito, rg, nascimento, email, num_carteira);
                 printf("Usuario encontrado com sucesso!\n\n");
             }
@@ -412,88 +414,20 @@ void Deletar(char num_Deletar[50]){
 }
 
 
-//função para cadastrar Atendimento //falta add no adm
-void CadastraUsuariosAtendimento(char login[30], char senha[30]);
-void CadastraUsuariosAtendimento(char login[30], char senha[30]){
+//função para cadastrar Atendimento
+void CadastraUserGeral(char login[30], char senha[30], char permissao[30]);
+void CadastraUserGeral(char login[30], char senha[30], char permissao[30]){
 
     FILE *arquivo;
 
-    arquivo = AbreArquivo('a', "SistemadeLoginAtendimento.txt");
-    fprintf(arquivo, "%s %s \n", login, senha);
+    arquivo = AbreArquivo('a', "SistemadeLoginGeral.txt");
+    fprintf(arquivo, "%s %s %s \n", login, senha, permissao);
     FecharArquivo(arquivo);
-}
-
-//função para cadastrar medico //falta add no adm
-void CadastraUsuariosMedico(char login[30], char senha[30]);
-void CadastraUsuariosMedico(char login[30], char senha[30]){
-
-    FILE *arquivo;
-
-    arquivo = AbreArquivo('a', "SistemadeLoginMedico.txt");
-    fprintf(arquivo, "%s %s \n", login, senha);
-    FecharArquivo(arquivo);
-}
-
-//função para deletar o usuario na sessão de medico
-void DeletarUserMedico(char deletarlogin[30]);
-void DeletarUserMedico(char deletarlogin[30]){
-
-    setlocale(LC_ALL, "Portuguese");//Coloca acento na linguagem PTBR
-    FILE *arquivo;
-    FILE *arquivoTemp;
-    char login [30];
-    char senha[30];
-    char verificalogin[30];
-    char verificasenha[30];
-    char loginAnterior[30];
-    bool apagou = false;
-
-        arquivo = AbreArquivo('l', "SistemadeLoginMedico.txt");
-        arquivoTemp = AbreArquivo('g', "SistemadeLoginMedicoTemp.txt");
-
-        while(!feof(arquivo)){
-            fscanf(arquivo,"%s %s", &login, &senha);
-            // Zero = são iguais
-            // Diferente de Zero = não são iguais
-            if(strcmp(loginAnterior,login) != 0){
-                strcpy(loginAnterior,login);
-                if(strcmp(deletarlogin,login) != 0){
-                    fprintf(arquivoTemp, "%s %s\n", login, senha);
-                }else{
-                    apagou = true;
-                }
-            }
-        }
-        FecharArquivo(arquivo);
-        FecharArquivo(arquivoTemp);
-        arquivo = AbreArquivo('g', "SistemadeLoginMedico.txt");
-        arquivoTemp = AbreArquivo('l', "SistemadeLoginMedicoTemp.txt");
-
-        strcpy(loginAnterior,"");
-
-        while(!feof(arquivoTemp)){
-            fscanf(arquivoTemp,"%s %s", &login, &senha);
-            if(strcmp(loginAnterior,login) != 0){
-                strcpy(loginAnterior,login);
-                fprintf(arquivo, "%s %s\n", login, senha);
-            }
-        }
-
-        FecharArquivo(arquivo);
-        FecharArquivo(arquivoTemp);
-
-        if(apagou){
-            printf("Usuario deletado com sucesso!\n\n");
-        }else{
-            printf("Usuario não encontrado!\n\n");
-
-        }
-
 }
 
 //função para deletar o usuario na sessão de atendimento
-void DeletarUserAtendimento(char deletarlogin[30]);
-void DeletarUserAtendimento(char deletarlogin[30]){
+void DeletarUserGeral(char deletarlogin[30]);
+void DeletarUserGeral(char deletarlogin[30]){
 
     setlocale(LC_ALL, "Portuguese");//Coloca acento na linguagem PTBR
     FILE *arquivo;
@@ -501,22 +435,23 @@ void DeletarUserAtendimento(char deletarlogin[30]){
 
     char login [30];
     char senha[30];
+    char permissao[30];
     char verificalogin[30];
     char verificasenha[30];
     char loginAnterior[30];
     bool apagou = false;
 
-        arquivo = AbreArquivo('l', "SistemadeLoginAtendimento.txt");
-        arquivoTemp = AbreArquivo('g', "SistemadeLoginAtendimentoTemp.txt");
+        arquivo = AbreArquivo('l', "SistemadeLoginGeral.txt");
+        arquivoTemp = AbreArquivo('g', "SistemadeLoginGeralTemp.txt");
 
         while(!feof(arquivo)){
-            fscanf(arquivo,"%s %s", &login, &senha);
+            fscanf(arquivo,"%s %s %s", &login, &senha, &permissao);
             // Zero = são iguais
             // Diferente de Zero = não são iguais
             if(strcmp(loginAnterior,login) != 0){
                 strcpy(loginAnterior,login);
                 if(strcmp(deletarlogin,login) != 0){
-                    fprintf(arquivoTemp, "%s %s\n", login, senha);
+                    fprintf(arquivoTemp, "%s %s %s\n", login, senha, permissao);
                 }else{
                     apagou = true;
                 }
@@ -524,16 +459,16 @@ void DeletarUserAtendimento(char deletarlogin[30]){
         }
         FecharArquivo(arquivo);
         FecharArquivo(arquivoTemp);
-        arquivo = AbreArquivo('g', "SistemadeLoginAtendimento.txt");
-        arquivoTemp = AbreArquivo('l', "SistemadeLoginAtendimentoTemp.txt");
+        arquivo = AbreArquivo('g', "SistemadeLoginGeral.txt");
+        arquivoTemp = AbreArquivo('l', "SistemadeLoginGeralTemp.txt");
 
         strcpy(loginAnterior,"");
 
         while(!feof(arquivoTemp)){
-            fscanf(arquivoTemp,"%s %s", &login, &senha);
+            fscanf(arquivoTemp,"%s %s %s", &login, &senha, &permissao);
             if(strcmp(loginAnterior,login) != 0){
                 strcpy(loginAnterior,login);
-                fprintf(arquivo, "%s %s\n", login, senha);
+                fprintf(arquivo, "%s %s %s\n", login, senha, permissao);
             }
         }
 
@@ -548,6 +483,28 @@ void DeletarUserAtendimento(char deletarlogin[30]){
         }
 }
 
+void ListarUserGeral();
+void ListarUserGeral(){
+        setlocale(LC_ALL, "Portuguese");//Coloca acento na linguagem PTBR
+
+    FILE *arquivo;
+    char login[30];
+    char senha[30];
+    char permissao[30];
+    char nomeAnterior[50];
+
+    printf("LISTA DE USUARIOS\n");
+
+    arquivo = AbreArquivo('l',"SistemadeLoginGeral.txt");
+    while(!feof(arquivo)){
+        fscanf(arquivo,"%s %s %s", &login, &senha, &permissao);
+        if(strcmp(nomeAnterior,login) != 0){
+            strcpy(nomeAnterior,login);
+            printf("\n|------------------------------------------------------\n|Nome:............. %s \n|Senha:............. %s \n|Permissão:............. %s", login, senha, permissao);
+        }
+    }
+    FecharArquivo(arquivo);
+}
 
 //função para cadastrar consulta no faturamento
 void CadastraRelatorioFaturamento(char nome[30], char ult_nome[30], char num_carteira[30], int gasto_consulta, int dia_consulta, int mes_consulta, int ano_consulta);
@@ -575,76 +532,106 @@ void ListarRelatorioFaturamento(){
     int mes_consulta;
     int ano_consulta;
 
+    printf("\nFaturamento Mensal: \n");
+
     arquivo = AbreArquivo('l',"Relatorio.txt");
     while(!feof(arquivo)){
         fscanf(arquivo,"%s %s %s %d %d %d %d", &nome, &ult_nome, &num_carteira, &gasto_consulta, &dia_consulta, &mes_consulta, &ano_consulta);
-            printf("Nome: %s %s  |  NC: %s | Gastos do paciente: %d | data: %d/%d/%d \n\n", nome, ult_nome, num_carteira, gasto_consulta, dia_consulta, mes_consulta, ano_consulta);
-        }
-
-        printf("\nFaturamento Mensal: %d%d\n", gasto_consulta);
+           printf("|Nome: \t\tNC: \t   Gastos do paciente:   data: \n|%s %s  |  %s |  %d                | %d/%d/%d \n\n", nome, ult_nome, num_carteira, gasto_consulta, dia_consulta, mes_consulta, ano_consulta);
+    }
     FecharArquivo(arquivo);
-
 }
 
+int volta_menu_login();
+int volta_menu_login(){
+
+    //Pede pra o usuario escolher voltar pro menu ou fazer outra ação
+    do{
+        printf("Digite 0 para sair para o menu: ");
+        scanf("%d", &volta_menu);
+
+        if(volta_menu == 0){
+             system("cls");
+            return main();
+        }else{
+            system("cls");
+            printf("\nOpção Invalida\n\n");
+            sleep(0,5);
+        }
+    }while(volta_menu != 0);
+}
 
 int volta_menu_antedimento();
 int volta_menu_antedimento(){
 
-    do{
     //Pede pra o usuario escolher voltar pro menu ou fazer outra ação
-    printf("Digite 1 para retornar ao menu: ");
-    scanf("%d", &volta_menu);
+    do{
+        printf("Digite 1 para retornar ao menu: ");
+        scanf("%d", &volta_menu);
 
-    principal_atendente();
+        if(volta_menu == 1){
+            return principal_atendente();
+        }else{
+            printf("\nOpção Invalida\n\n");
+            sleep(0,5);
+        }
     }while(volta_menu != 1);
-
-    return principal_atendente();
 }
 
 int volta_menu_medico();
 int volta_menu_medico(){
 
-    do{
     //Pede pra o usuario escolher voltar pro menu ou fazer outra ação
-    printf("Digite 1 para retornar ao menu: ");
-    scanf("%d", &volta_menu);
+    do{
+        printf("Digite 1 para retornar ao menu: ");
+        scanf("%d", &volta_menu);
 
-    principal_atendente();
+        if(volta_menu == 1){
+            return principal_medico();
+        }else{
+            printf("\nOpção Invalida\n\n");
+            sleep(0,5);
+        }
     }while(volta_menu != 1);
-
-    return principal_medico();
 }
 
 int volta_menu_conveniado();
 int volta_menu_conveniado(){
 
-    do{
     //Pede pra o usuario escolher voltar pro menu ou fazer outra ação
-    printf("Digite 1 para retornar ao menu: ");
-    scanf("%d", &volta_menu);
+    do{
+        printf("Digite 1 para retornar ao menu: ");
+        scanf("%d", &volta_menu);
 
-    principal_atendente();
+        if(volta_menu == 1){
+            return principal_conveniado();
+        }else{
+            printf("\nOpção Invalida\n\n");
+            sleep(0,5);
+        }
     }while(volta_menu != 1);
-
-    return principal_conveniado();
 }
 
 int volta_menu_adm();
 int volta_menu_adm(){
-    do{
+
     //Pede pra o usuario escolher voltar pro menu ou fazer outra ação
-    printf("Digite 1 para retornar ao menu: ");
-    scanf("%d", &volta_menu);
+    do{
+        printf("\nDigite 1 para retornar ao menu: ");
+        scanf("%d", &volta_menu);
 
-    principal_atendente();
+        if(volta_menu == 1){
+            return principal_adm();
+        }else{
+            printf("\nOpção Invalida\n\n");
+            sleep(0,5);
+        }
     }while(volta_menu != 1);
-
-    return principal_adm();
 }
 
 //função para logar Atendimento //pronta
-void sistemadeloginAtendimento();
-void sistemadeloginAtendimento(){
+void sistemadeloginGeral();
+void sistemadeloginGeral(){
     FILE *arquivo;
     char login [30];
     char senha[30];
@@ -662,7 +649,7 @@ void sistemadeloginAtendimento(){
         gets(verificasenha);
 
 
-        arquivo = AbreArquivo('l',"SistemadeLoginAtendimento.txt");
+        arquivo = AbreArquivo('l',"SistemadeLoginGeral.txt");
         while(!feof(arquivo)){
             fscanf(arquivo, "%s %s %s", &login, &senha, &permissao);
             if(strcmp(verificalogin, login) == 0 && strcmp(verificasenha, senha) == 0){
@@ -709,102 +696,6 @@ void sistemadeloginAtendimento(){
 
 }
 
-//função para logar medico //pronta
-void sistemadeloginMedico();
-void sistemadeloginMedico(){
-
-    setlocale(LC_ALL, "Portuguese");//Coloca acento na linguagem PTBR
-    FILE *arquivo;
-    char login [30];
-    char senha[30];
-    char verificalogin[30];
-    char verificasenha[30];
-
-    do{
-    printf("Digite seu login: ");
-    setbuf(stdin,NULL);
-    gets(verificalogin);
-    printf("\nDiigte sua senha: ");
-    setbuf(stdin,NULL);
-    gets(verificasenha);
-
-
-    arquivo = AbreArquivo('l',"SistemadeLoginMedico.txt");
-    while(!feof(arquivo)){
-        fscanf(arquivo, "%s %s", &login, &senha);
-        if(strcmp(verificalogin, login) == 0){
-            if(strcmp(verificasenha, senha) == 0){
-            }
-        }else{
-            printf("Caso Esqueceu seu login ou senha entre em contato com o administrador\n d4niel.arruda@gmail.com\n");
-            sleep(1,5);
-            system("cls");
-        }
-    }
-
-    }while(strcmp(verificalogin, login) != 0);
-    FecharArquivo(arquivo);
-
-}
-
-//função para o sistema de login
-void login_e_menu_usuario ();
-void login_e_menu_usuario(){
-
-    do{
-    setlocale(LC_ALL, "Portuguese");//Coloca acento na linguagem PTBR
-
-    switch(login_escolha)
-    {
-    case 0:
-        return 0;
-        break;
-
-    case 1:
-        sistemadeloginMedico();
-        break;
-
-    case 2:
-        sistemadeloginAtendimento();
-
-        break;
-
-    case 3:
-        printf("Tudo Ok!");
-        sleep(1,25);
-        system ("cls");
-
-        break;
-
-    case 4:
-        ;
-        char senhaCase4[15] = "123456789"; //Tem que ter mais espaço que a string. Pelo menos 1 a mais que a palavra.
-        char senhaCase4_1[15]; //Pode ser do mesmo tamanho que o login
-
-        do{
-            printf("SENHA: ");
-            scanf("%s",senhaCase4_1); //String se lê com %s
-            if (strcmp(senhaCase4, senhaCase4_1) == 0){
-                printf("logado\n");
-                sleep(1,5);
-                system("cls");
-            }else{
-                printf("senha errada\n");
-                sleep(1);
-                system("cls");
-            }
-        }while(strcmp(senhaCase4, senhaCase4_1) !=0);
-        break;
-
-    default:
-        printf("opção incorreta");
-        sleep(1,25);
-        system("cls");
-
-    }
-    } while (login_escolha >4);
-}
-
 //tela de menu do atendimento e suas funções
 void principal_atendente();
 void principal_atendente(){
@@ -832,31 +723,31 @@ void principal_atendente(){
     system("cls");
     printf("\n\t\tMENU");
     printf("\n");
-    printf("\t -------------------------------");
-    printf("\n\t| 1 - Cadastrar conveniado      |\n");
-    printf("\t|-------------------------------");
-    printf("\n\t| 2 - Listar conveniados        |\n");
-    printf("\t|-------------------------------");
-    printf("\n\t| 3 - Pesquisar conveniados     |\n");
-    printf("\t|-------------------------------");
-    printf("\n\t| 4 - Deletar cadastro          |\n");
-    printf("\t|-------------------------------");
-    printf("\n\t| 5 - Agendar Consulta          |\n");
-    printf("\t|-------------------------------");
-    printf("\n\t| 6 - Listar agendamento        |\n");
-    printf("\t|-------------------------------");
-    printf("\n\t| 7 - Pesquisar agendamento     |\n");
-    printf("\t|-------------------------------");
-    printf("\n\t| 8 - Deletar agendamento       |\n");
-    printf("\t|-------------------------------");
-    printf("\n\t| 9 - Situação dos feedbacks    |\n");
-    printf("\t|-------------------------------");
-    printf("\n\t| 10 - Deletar feedbacks        |\n");
-    printf("\t|-------------------------------");
-    printf("\n\t| 11 - Relatorios de faturamento|\n");
-    printf("\t -------------------------------");
-    printf("\n\t| 0 - Sair                      |\n");
-    printf("\t -------------------------------");
+    printf("\t ------------------------------------------");
+    printf("\n\t| 1 - Cadastrar conveniado                 |\n");
+    printf("\t|------------------------------------------");
+    printf("\n\t| 2 - Listar conveniados                   |\n");
+    printf("\t|------------------------------------------");
+    printf("\n\t| 3 - Pesquisar conveniados                |\n");
+    printf("\t|------------------------------------------");
+    printf("\n\t| 4 - Deletar cadastro                     |\n");
+    printf("\t|------------------------------------------");
+    printf("\n\t| 5 - Agendar Consulta                     |\n");
+    printf("\t|------------------------------------------");
+    printf("\n\t| 6 - Listar Consultas                     |\n");
+    printf("\t|------------------------------------------");
+    printf("\n\t| 7 - Pesquisar Consultas                  |\n");
+    printf("\t|------------------------------------------");
+    printf("\n\t| 8 - Deletar Consultas                    |\n");
+    printf("\t|------------------------------------------");
+    printf("\n\t| 9 - Situação dos feedbacks               |\n");
+    printf("\t|------------------------------------------");
+    printf("\n\t| 10 - Deletar feedbacks                   |\n");
+    printf("\t|------------------------------------------");
+    printf("\n\t| 11 - Relatorios de faturamento  e tabela |\n");
+    printf("\t ------------------------------------------");
+    printf("\n\t| 0 - Sair                                 |\n");
+    printf("\t ------------------------------------------");
 
 
     printf("\nDigite uma opcao: ");
@@ -889,7 +780,7 @@ void principal_atendente(){
             printf("\nDigite o RG: ");
             setbuf(stdin,NULL);
             gets(rg);
-            printf("\nDigite seu Nascimento: ");
+            printf("\nDigite o Nascimento: ");
             scanf("%d", &nascimento);
             printf("\nDigite o Email: ");
             setbuf(stdin,NULL);
@@ -953,7 +844,7 @@ void principal_atendente(){
             gets(cpf_digito);
             printf("\nDigite o dia, mês e ano da consulta sem barra: ");
             scanf("%d", &dia_consulta);
-            printf("\nDigite o hora da consulta: ");
+            printf("\nDigite a hora da consulta: ");
             scanf("%d", &hora_consulta);
             printf("\nHorario: %d:00 \nDigite o minuto da consulta: ", hora_consulta);
             scanf("%d", &minuto_consulta);
@@ -963,7 +854,7 @@ void principal_atendente(){
             printf("\nDigite o numero da carteirinha: ");
             setbuf(stdin,NULL);
             gets(num_carteira);
-            printf("\n\n| Paz | Cancioneiro | Paulista |");
+            printf("\n| Paz | Cancioneiro | Paulista |");
             printf("\nDigite a o nome da unidade: ");
             setbuf(stdin,NULL);
             gets(unidade);
@@ -1005,7 +896,7 @@ void principal_atendente(){
             gets(num_carteiraDeletar);
             printf("\nDigite o dia, mês e ano da consulta sem barra: ");
             scanf("%d", &diaDeletar);
-            printf("\nDigite o horario da sua consulta: ");
+            printf("\nDigite a hora da sua consulta: ");
             scanf("%d", &horarioDeletar);
             printf("\nHorario: %d:00 \nDigite o minuto da consulta: ", hora_consulta);
             scanf("%d", &minutoDeletar);
@@ -1122,7 +1013,7 @@ void principal_atendente(){
 
                 break;
                 case 0:
-                    //volta ao menu do atendente
+                    //volta ao menu de Atendimento
                     volta_menu_antedimento();
                 break;
 
@@ -1135,7 +1026,8 @@ void principal_atendente(){
         break;
 
         case 0:
-            exit(0);
+            //volta ao menu de login
+            volta_menu_login();
         break;
 
         default:
@@ -1207,8 +1099,7 @@ void principal_conveniado(){
             setbuf(stdin,NULL);
             gets(telefone);
             printf("\nDigite o nome do medico");
-            printf("(Andre) (Osvaldo) (Luis)");
-            printf(": ");
+            printf("(Andre) (Osvaldo) (Luis):");
             setbuf(stdin,NULL);
             gets(nome_medico);
             printf("\nDigite os 9 primeiros numero do seu CPF sem ponto ou traço: ");
@@ -1229,7 +1120,7 @@ void principal_conveniado(){
             printf("\nDigite o numero da carteirinha: ");
             setbuf(stdin,NULL);
             gets(num_carteira);
-            printf("\n\n| Paz | Cancioneiro | Paulista |");
+            printf("\n| Paz | Cancioneiro | Paulista |");
             printf("\nDigite a o nome da unidade: ");
             setbuf(stdin,NULL);
             gets(unidade);
@@ -1267,9 +1158,9 @@ void principal_conveniado(){
             gets(num_carteiraDeletar);
             printf("\nDigite o dia, mês e ano da consulta sem barra: ");
             scanf("%d", &diaDeletar);
-            printf("\nDigite o horario da sua consulta: ");
+            printf("\nDigite o hora da sua consulta: ");
             scanf("%d", &horarioDeletar);
-            printf("\nHorario: %d:00 \nDigite o minuto da consulta: ", hora_consulta);
+            printf("\nHorario: %d:00 \nDigite o minuto da consulta: ", horarioDeletar);
             scanf("%d", &minutoDeletar);
             DeletarAgendamento(nomeDeletarAgenda, num_carteiraDeletar, diaDeletar, horarioDeletar, minutoDeletar);
             volta_menu_conveniado();
@@ -1281,13 +1172,15 @@ void principal_conveniado(){
             int nota_medico;
             int nota_atendimento;
 
-            printf("\nDigite o nome do medico: ");
+            printf("\nDigite o nome do medico");
+            printf("(Andre) (Osvaldo) (Luis): ");
             setbuf(stdin,NULL);
             gets(nome_medico);
-            printf("\nDigite uma nota de 0 a 10 para o atensimento de seu medico: ");
+            printf("\nDigite uma nota de 0 a 10 para o atendimento de seu medico: ");
             scanf("%d", &nota_medico);
             printf("\nDigite uma nota de 0 a 10 para seu atendimento em geral: ");
             scanf("%d", &nota_atendimento);
+            printf("Muito Obrigado pelo seu Feedback :)\n\n");
             CadastraFeedback(nome_medico, nota_medico, nota_atendimento);
             volta_menu_conveniado();
 
@@ -1307,9 +1200,13 @@ void principal_conveniado(){
 
             printf("|   Av. Paulista, 900 - Cerqueira César São Paulo - SP CEP 01310-100\n");
             printf("|   Tel.: (11) 3170-3700 \n");
-            printf("|----------------------------------------------------------------------------------------------|\n");
+            printf("|----------------------------------------------------------------------------------------------|\n\n");
 
             volta_menu_conveniado();
+        break;
+
+        case 0:
+            volta_menu_login();
         break;
 
         default:
@@ -1328,6 +1225,7 @@ void principal_adm(){
     setlocale(LC_ALL, "Portuguese");//Coloca acento na linguagem PTBR
     char login[30];
     char senha[30];
+    char permissao[30];
     int escolha_tela_adm;
     //MENU PRINCIPAL
 
@@ -1338,8 +1236,10 @@ void principal_adm(){
     printf("\t|-----------------------------");
     printf("\n\t| 1 - Adicionar Usuarios      |\n");
     printf("\t|-----------------------------");
-    printf("\n\t| 2 - Deletar Usuarios        |\n");
+    printf("\n\t| 2 - Listar Usuarios         |\n");
     printf("\t|-----------------------------");
+    printf("\n\t| 3 - Deletar Usuarios        |\n");
+    printf("\t -----------------------------");
     printf("\n\t| 0 - Sair                    |\n");
     printf("\t -----------------------------");
 
@@ -1355,96 +1255,38 @@ void principal_adm(){
     switch (escolha_tela_adm)
     {
     case 1:
-        ;
-        int escolha_tela_add_user_adm;
-        //MENU ADD USUARIO
-        printf("\n\n\t|-----------------------------");
-        printf("\n\t| 1 - Adicionar Usuario Medico    |\n");
-        printf("\t|---------------------------------");
-        printf("\n\t| 2 - Adcionar Usuario Atendimento|\n");
-        printf("\t|---------------------------------");
-        printf("\n\t| 0 - Sair                        |\n");
-        printf("\t|---------------------------------");
-
-        printf("\nDigite uma opcao: ");
-        sleep(0,5);
-        sleep(0,5);//pausa a tela por x segundos
-        scanf("%d", &escolha_tela_add_user_adm);
-
-        sleep(1);
-        system("cls");//limpa a tela
-
-        switch(escolha_tela_add_user_adm){
-            //OPÇÕES PARA ADD USER
-            case 1:
-                CadastraUsuariosMedico(login, senha);
-                volta_menu_adm();
-            break;
-
-            case 2:
-                CadastraUsuariosAtendimento(login, senha);
-                volta_menu_adm();
-            break;
-
-            case 0:
-                volta_menu_adm();
-            break;
-
-            default:
-                system("cls");
-                printf("\n\nOpcao invalida! Tente Novamente!\n\n");
-                sleep(1,5);
-                volta_menu_adm();
-            break;
-            }
+        printf("Digite o nome do novo usuario: ");
+        setbuf(stdin,NULL);
+        gets(login);
+        printf("\nDigite a Senha do novo usuario: ");
+        setbuf(stdin,NULL);
+        gets(senha);
+        printf("\nDigite o tipo de Permissão que desejar dar ao usuario");
+        printf("\n(Administador) (Medico) (Atendimento) (Conveniado)");
+        printf(": ");
+        setbuf(stdin,NULL);
+        gets(permissao);
+        CadastraUserGeral(login, senha, permissao);
+        volta_menu_adm();
+    break;
 
     case 2:
+        ListarUserGeral();
+        volta_menu_adm();
+    break;
+
+    case 3:
         ;
-        int escolha_tela_delete_user_adm;
-
-        printf("\n\n\t|-----------------------------");
-        printf("\n\t| 1 - Deletar Usuario Medico    |\n");
-        printf("\t|---------------------------------");
-        printf("\n\t| 2 - Deletar Usuario Atendimento|\n");
-        printf("\t|---------------------------------");
-
-        printf("\nDigite uma opcao: ");
-        sleep(0,5);
-        sleep(0,5);//pausa a tela por x segundos
-        scanf("%d", &escolha_tela_delete_user_adm);
-
-        sleep(1);
-        system("cls");//limpa a tela
-
-        switch(escolha_tela_delete_user_adm){
-            case 1:
-                ;
-                char deletarlogin[30];
-                printf("\nDigite o nome do usuario que deseja deletar: ");
-                setbuf(stdin,NULL);
-                gets(deletarlogin);
-                DeletarUserMedico(deletarlogin);
-                volta_menu_adm();
-            break;
-
-            case 2:
-                DeletarUserAtendimento(deletarlogin);
-                volta_menu_adm();
-            break;
-
-            default:
-                system("cls");
-                printf("\n\nOpcao invalida! Tente Novamente!\n\n");
-                sleep(1,5);
-                volta_menu_adm();
-            break;
-            }
+        char deletarlogin[30];
+        printf("\nDigite o nome do usuario que deseja deletar: ");
+        setbuf(stdin,NULL);
+        gets(deletarlogin);
+        DeletarUserGeral(deletarlogin);
+        volta_menu_adm();
+    break;
 
     case 0:
-        system("cls");
-        printf("\n\nOpcao invalida! Tente Novamente!\n\n");
-        sleep(1,5);
-        volta_menu_adm();
+        volta_menu_login();
         break;
 
     default:
@@ -1475,7 +1317,7 @@ void principal_medico(){
     printf("\n\t| 3 - Pesquisar conveniado             |\n");
     printf("\t|--------------------------------------");
     printf("\n\t| 0 - Sair                             |\n");
-    printf("\t| -----------------------------------\n");
+    printf("\t| -------------------------------------\n");
 
     printf("\nDigite uma opcao: ");
     sleep(0,5);
@@ -1515,6 +1357,10 @@ void principal_medico(){
         volta_menu_medico();
     break;
 
+    case 0:
+        volta_menu_login();
+    break;
+
     default:
         system("cls");
         printf("\nOpção incorreta\n");
@@ -1544,7 +1390,7 @@ int main ()
 
     printf("\n\t\t\t\t\t\t  | Usuarios | \t\t");
     printf("\n\t\t__________________________________________________________________________________\n\n");
-    printf("\t\t|0-Sair \t 1-Conveniado \t2-Usuários  |\n");
+    printf("\t\t|       0-Sair \t\t\t  1-Conveniado \t\t\t2-Usuários       |\n");
     printf("\t\t__________________________________________________________________________________\n\n");
 
     printf("\nEscolha um opção por favor --> ");
@@ -1572,7 +1418,7 @@ int main ()
         principal_conveniado();
 
     case 2:
-    	sistemadeloginAtendimento();
+    	sistemadeloginGeral();
         break;
     default:
         printf("opção incorreta");

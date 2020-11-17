@@ -1,5 +1,0 @@
-teste teste Administrador
-bianca 123 Atendente
-paulo 123 Medico
-daniel 123 Administrador
-petreke 123 Conveniado
