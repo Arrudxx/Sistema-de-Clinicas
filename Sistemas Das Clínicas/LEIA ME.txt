@@ -1,0 +1,3 @@
+# PIM-Sistema de Clínicas
+Sistema de Clínicas desenvolvido em C, para o projeto do PIM do curso de analise e desenvolvimento de sistemas.
+Obs: Para melhor visualização do projeto abrir em modo tela cheia 
