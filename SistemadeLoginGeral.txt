@@ -1,5 +1,0 @@
-Osvaldo 123 Medico
-Luis 123 Medico
-Andre 123 Medico
-Bianca 123 Atendente
-Daniel 123 Administrador
